@@ -22,9 +22,11 @@
     "uuid": "^14.0.1"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "babel-plugin-react-compiler": "^1.0.0",
     "unplugin-dts": "^1.0.3",
     "vite-plugin-libcss": "^1.1.2",
     "vscode-languageclient": "^9.0.1"

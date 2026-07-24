@@ -423,7 +423,9 @@ export function activate(context: ExtensionContext) {
 
         client.onNotification(
             "prover/proofView",
-            (proofView: ProofViewNotification) => {
+            (_proofView: ProofViewNotification) => {
+                // const proofView = JSON.stringify(_proofView);
+                const proofView = _proofView;
                 const editor = window.activeTextEditor
                     ? window.activeTextEditor
                     : window.visibleTextEditors[0];

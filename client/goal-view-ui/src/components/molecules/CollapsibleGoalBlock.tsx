@@ -6,7 +6,7 @@ import { CollapsibleGoal } from "../../types";
 import Accordion from "../atoms/Accordion";
 import GoalBlock from "./GoalBlock";
 
-type CollapsibleGoalBlockProps = {
+export type CollapsibleGoalBlockProps = {
     goal: CollapsibleGoal;
     collapseHandler: (id: string) => void;
     toggleContextHandler: (id: string) => void;

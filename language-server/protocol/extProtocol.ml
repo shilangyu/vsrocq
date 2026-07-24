@@ -156,7 +156,9 @@ module Notification = struct
       | ProofView params -> 
         let method_ = "prover/proofView" in
         let params = ProofViewParams.yojson_of_t params in
-        let params = Some (Jsonrpc.Structured.t_of_yojson params) in
+        (* let params = Some (Jsonrpc.Structured.t_of_yojson params) in *)
+        let params_raw = Yojson.Safe.to_string ~std:true params in
+        let params = Some (Jsonrpc.Structured.t_of_yojson (`List [ `String params_raw ])) in
         Jsonrpc.Notification.{ method_; params }
       | SearchResult params ->
         let method_ = "prover/searchResult" in

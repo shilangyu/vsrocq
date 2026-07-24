@@ -13,12 +13,15 @@
     "pp-display": "^0.0.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-icons": "^5.7.0"
+    "react-icons": "^5.7.0",
+    "react-window": "^2.3.0"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/vscode-webview": "^1.57.5",
-    "@vitejs/plugin-react": "^6.0.3"
+    "@vitejs/plugin-react": "^6.0.3",
+    "babel-plugin-react-compiler": "^1.0.0"
   }
 }

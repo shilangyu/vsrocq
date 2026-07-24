@@ -43,11 +43,6 @@ const goalSection: FunctionComponent<GoalSectionProps> = (props) => {
         }
     }, [goals]);
 
-    //This case should not happen
-    if (goals === null) {
-        return null;
-    }
-
     const section =
         goals.length === 0 ? (
             unfocusedGoals !== undefined && unfocusedGoals.length > 0 ? (

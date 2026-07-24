@@ -3,6 +3,7 @@ import { FunctionComponent, useEffect, useRef } from "react";
 import { CollapsibleGoal } from "../../types";
 import CollapsibleGoalBlock from "../molecules/CollapsibleGoalBlock";
 
+import { List, RowComponentProps, useDynamicRowHeight } from "react-window";
 import classes from "./GoalCollapsibles.module.css";
 
 type GoalSectionProps = {
@@ -14,18 +15,14 @@ type GoalSectionProps = {
 };
 
 const goalSection: FunctionComponent<GoalSectionProps> = (props) => {
-    const {
-        goals,
-        collapseGoalHandler,
-        toggleContextHandler,
-        maxDepth,
-        helpMessageHandler,
-    } = props;
     const firstGoalRef = useRef<HTMLDivElement>(null);
+    const rowHeight = useDynamicRowHeight({
+        defaultRowHeight: 88,
+    });
 
     useEffect(() => {
         scrollToBottomOfFirstGoal();
-    }, [goals]);
+    }, [props.goals]);
 
     const scrollToBottomOfFirstGoal = () => {
         if (firstGoalRef.current) {
@@ -37,38 +34,37 @@ const goalSection: FunctionComponent<GoalSectionProps> = (props) => {
         }
     };
 
-    const goalCollapsibles = goals.map((goal, index) => {
-        if (index === 0) {
-            return (
-                <>
-                    <CollapsibleGoalBlock
-                        goal={goal}
-                        goalIndex={index + 1}
-                        goalIndicator={index + 1 + " / " + goals.length}
-                        collapseHandler={collapseGoalHandler}
-                        toggleContextHandler={toggleContextHandler}
-                        helpMessageHandler={helpMessageHandler}
-                        maxDepth={maxDepth}
-                    />
-                    <div ref={firstGoalRef} />
-                </>
-            );
-        }
-
-        return (
-            <CollapsibleGoalBlock
-                goal={goal}
-                goalIndex={index + 1}
-                goalIndicator={index + 1 + " / " + goals.length}
-                collapseHandler={collapseGoalHandler}
-                toggleContextHandler={toggleContextHandler}
-                maxDepth={maxDepth}
-                helpMessageHandler={helpMessageHandler}
-            />
-        );
-    });
-
-    return <div className={classes.Collapsibles}>{goalCollapsibles}</div>;
+    return (
+        <List
+            className={classes.Collapsibles}
+            rowComponent={RowComponent}
+            rowCount={props.goals.length}
+            rowHeight={rowHeight}
+            rowProps={props}
+        />
+    );
 };
+
+function RowComponent({
+    goals,
+    collapseGoalHandler,
+    toggleContextHandler,
+    maxDepth,
+    helpMessageHandler,
+    index,
+}: RowComponentProps<GoalSectionProps>) {
+    let goal = goals[index];
+    return (
+        <CollapsibleGoalBlock
+            goal={goal}
+            goalIndex={index + 1}
+            goalIndicator={index + 1 + " / " + goals.length}
+            collapseHandler={collapseGoalHandler}
+            toggleContextHandler={toggleContextHandler}
+            maxDepth={maxDepth}
+            helpMessageHandler={helpMessageHandler}
+        />
+    );
+}
 
 export default goalSection;

@@ -13,6 +13,7 @@ import { VscGear } from "react-icons/vsc";
 import {
     ProofViewGoals,
     ProofViewGoalsKey,
+    ProofViewGoalsType,
     ProofViewMessage,
 } from "../../types";
 import Accordion from "../atoms/Accordion";
@@ -48,10 +49,10 @@ const proofViewPage: FunctionComponent<ProofViewPageProps> = (props) => {
         toggleContextHandler,
     } = props;
 
-    const renderGoals = () => {
-        const goalBadge = <VSCodeBadge>{goals!.main.length}</VSCodeBadge>;
-        const shelvedBadge = <VSCodeBadge>{goals!.shelved.length}</VSCodeBadge>;
-        const givenUpBadge = <VSCodeBadge>{goals!.givenUp.length}</VSCodeBadge>;
+    const renderGoals = (goals: ProofViewGoalsType) => {
+        const goalBadge = <VSCodeBadge>{goals.main.length}</VSCodeBadge>;
+        const shelvedBadge = <VSCodeBadge>{goals.shelved.length}</VSCodeBadge>;
+        const givenUpBadge = <VSCodeBadge>{goals.givenUp.length}</VSCodeBadge>;
 
         const tabs = [
             <VSCodePanelTab>Main {goalBadge}</VSCodePanelTab>,
@@ -63,12 +64,12 @@ const proofViewPage: FunctionComponent<ProofViewPageProps> = (props) => {
             <VSCodePanelView className={classes.View}>
                 <GoalSection
                     key={"goals"}
-                    goals={goals!.main}
-                    unfocusedGoals={goals!.unfocused}
+                    goals={goals.main}
+                    unfocusedGoals={goals.unfocused}
                     collapseGoalHandler={(id) =>
                         collapseGoalHandler(
                             id,
-                            goals!.main.length
+                            goals.main.length
                                 ? ProofViewGoalsKey.main
                                 : ProofViewGoalsKey.unfocused,
                         )
@@ -76,24 +77,24 @@ const proofViewPage: FunctionComponent<ProofViewPageProps> = (props) => {
                     toggleContextHandler={(id) =>
                         toggleContextHandler(
                             id,
-                            goals!.main.length
+                            goals.main.length
                                 ? ProofViewGoalsKey.main
                                 : ProofViewGoalsKey.unfocused,
                         )
                     }
                     displaySetting={displaySetting}
                     emptyMessage={
-                        goals!.shelved.length
+                        goals.shelved.length
                             ? "There are shelved goals. Try using `Unshelve.`"
-                            : goals!.givenUp.length
+                            : goals.givenUp.length
                               ? "There are some goals you gave up. Go back and solve them, or use `Admitted.`"
-                              : goals!.unfocused.length
+                              : goals.unfocused.length
                                 ? "The subproof is complete."
                                 : "There are no more subgoals"
                     }
                     emptyIcon={
-                        goals!.shelved.length === 0 &&
-                        goals!.givenUp.length === 0 ? (
+                        goals.shelved.length === 0 &&
+                        goals.givenUp.length === 0 ? (
                             <VscPass />
                         ) : (
                             <VscWarning />
@@ -106,7 +107,7 @@ const proofViewPage: FunctionComponent<ProofViewPageProps> = (props) => {
             <VSCodePanelView className={classes.View}>
                 <GoalSection
                     key="shelved"
-                    goals={goals!.shelved}
+                    goals={goals.shelved}
                     collapseGoalHandler={(id) =>
                         collapseGoalHandler(id, ProofViewGoalsKey.shelved)
                     }
@@ -122,7 +123,7 @@ const proofViewPage: FunctionComponent<ProofViewPageProps> = (props) => {
             <VSCodePanelView className={classes.View}>
                 <GoalSection
                     key="givenup"
-                    goals={goals!.givenUp}
+                    goals={goals.givenUp}
                     collapseGoalHandler={(id) =>
                         collapseGoalHandler(id, ProofViewGoalsKey.givenUp)
                     }
@@ -153,7 +154,7 @@ const proofViewPage: FunctionComponent<ProofViewPageProps> = (props) => {
         goals === null ? (
             <EmptyState message="Not in proof mode" />
         ) : (
-            renderGoals()
+            renderGoals(goals)
         );
 
     return (

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import "./App.css";
 
 import ProofViewPage from "./components/templates/ProofViewPage";
@@ -30,8 +30,18 @@ const app = () => {
                 setGoalDepth(msg.data.maxDepth);
                 break;
             case "renderProofView":
-                const allGoals = msg.data.proofView.proof;
-                const messages = msg.data.proofView.messages;
+                const proofView = JSON.parse(msg.data.proofView);
+                const allGoals = proofView.proof;
+                const messages = proofView.messages;
+                console.log(
+                    "Got the goal view! Got it at: " +
+                        new Date().toLocaleTimeString(),
+                );
+                /*
+                console.log(
+                    "Size in approximate bytes: " +
+                        JSON.stringify(proofView).length,
+                ); */
                 setMessages(messages);
                 setGoals(
                     allGoals === null
@@ -83,6 +93,12 @@ const app = () => {
         }
     }, []);
 
+    useLayoutEffect(() => {
+        console.log(
+            "Done rendering goal view at: " + new Date().toLocaleTimeString(),
+        );
+    }, [Math.random()]);
+
     useEffect(() => {
         window.addEventListener("message", handleMessage);
         vscode.postMessage({ command: "pollGoals" });
@@ -126,19 +142,23 @@ const app = () => {
 
     return (
         <main>
-            <ProofViewPage
-                goals={goals}
-                messages={messages}
-                collapseGoalHandler={collapseGoalHandler}
-                displaySetting={goalDisplaySetting}
-                maxDepth={goalDepth}
-                settingsClickHandler={settingsClickHandler}
-                helpMessage={helpMessage}
-                helpMessageHandler={(message: string) =>
-                    setHelpMessage(message)
-                }
-                toggleContextHandler={toggleContext}
-            />
+            I have {goals?.main.length} main goals, {goals?.shelved.length}{" "}
+            shelved goals, and {goals?.givenUp.length} given up goals.
+            {true && (
+                <ProofViewPage
+                    goals={goals}
+                    messages={messages}
+                    collapseGoalHandler={collapseGoalHandler}
+                    displaySetting={goalDisplaySetting}
+                    maxDepth={goalDepth}
+                    settingsClickHandler={settingsClickHandler}
+                    helpMessage={helpMessage}
+                    helpMessageHandler={(message: string) =>
+                        setHelpMessage(message)
+                    }
+                    toggleContextHandler={toggleContext}
+                />
+            )}
         </main>
     );
 };
