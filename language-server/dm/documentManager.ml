@@ -413,9 +413,26 @@ let about st pos ~pattern =
   let vs = rocq_state_for st pos in
   QueryManager.about ~doc_id:(Document.id st.document) ~vs ~pattern
 
+let extract_string = function
+  | Tok.KEYWORD s -> "kw: " ^ s
+  | Tok.IDENT s -> "id: " ^ s
+  | Tok.STRING s ->"str: \"" ^ s ^ "\""
+  | Tok.FIELD s -> "field: " ^ s
+  | Tok.NUMBER n -> "nmber"
+  | Tok.LEFTQMARK -> "?"
+  | Tok.BULLET s -> "blt: " ^ s
+  | Tok.QUOTATION(_,s) -> s
+  | Tok.EOI -> ""
+
 let get_completions st pos =
   let vs = rocq_state_for st pos in
-  QueryManager.get_completions ~doc_id:(Document.id st.document) ~vs
+  let sts = Document.sentences st.document in
+  let _ = List.map (fun e -> begin
+      let toks = Document.tokens_of_sentence e in
+      log (fun () -> String.concat "|" (List.map (fun e -> extract_string (snd e)) toks));
+      ()
+  end) sts in
+  QueryManager.get_completions ~doc:st.document ~pos ~vs
 
 (* Ignore nested proofs option (lives in STM) instead of failing with
    anomaly when it is set in a .vo we Require.

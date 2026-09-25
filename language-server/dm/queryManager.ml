@@ -266,7 +266,7 @@ let print ~vs ~pattern =
 
 let get_completions ~vs =
   let settings = ExecutionManager.get_options () in
-  CompletionSuggester.get_completions settings.completion_options vs
+  CompletionSuggester.get_completions doc pos settings.completion_options vs
 
 (**************************************************************************)
 
@@ -324,6 +324,7 @@ let about ~doc_id ~vs ~pattern =
   ProverThread.try_run ~doc_id ~name:"about" ~timeout (fun () -> about vs ~pattern) |>
   to_types_error
 
-let get_completions ~doc_id ~vs =
-  ProverThread.try_run ~doc_id ~name:"get_completions" ~timeout:0.5 (fun () -> get_completions ~vs) |>
+let get_completions ~doc ~pos ~vs =
+  ProverThread.try_run ~doc_id:(Document.id doc) ~name:"get_completions" ~timeout:0.5
+    (fun () -> get_completions ~doc ~pos ~vs) |>
   to_list

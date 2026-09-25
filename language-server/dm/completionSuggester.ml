@@ -388,7 +388,9 @@ let builtin_vernacs = lazy (
   List.map (fun b -> Builtin b) (commands @ sets @ unsets @ adds @ removes @ tests @ print_tables)
 )
 
-let get_completions options vs =
+let get_completions doc pos options vs =
+  let loc = RawDocument.loc_of_position (Document.raw_document doc) pos in
+  let tok = Document.token_at_loc doc loc in
   Vernacstate.unfreeze_full_state vs;
   let lib_items = match vs.interp.lemmas with
     | None -> []

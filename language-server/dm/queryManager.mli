@@ -61,4 +61,7 @@ val jump_to_definition :
   (Lsp.Types.Range.t * string) option
 
 val get_completions :
-  doc_id:int -> vs:Vernacstate.t -> CompletionItems.completion_item list
+  doc:Document.document ->
+  pos:Lsp.Types.Position.t ->
+  vs:Vernacstate.t ->
+  CompletionItems.completion_item list
